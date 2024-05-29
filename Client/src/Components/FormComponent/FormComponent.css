@@ -1,0 +1,26 @@
+.form-container {
+  width: fit-content;
+  border-radius: 0.5rem;
+  box-shadow: #343a40 6px 10px;
+  background: #f8f9fa;
+  padding: 2rem;
+}
+
+.input-container {
+  margin: 1rem 0rem;
+}
+.input-container > .label {
+  margin-bottom: 0.25rem;
+  display: flex;
+}
+.input-container > input {
+  display: flex;
+  width: calc(100% - 2rem);
+}
+.form-button {
+  padding: 0.5rem 1rem;
+  color: #fafafa;
+  background: #343a40;
+  border-radius: 0.5rem;
+  margin-bottom: 0.5rem;
+}

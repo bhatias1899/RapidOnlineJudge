@@ -1,0 +1,20 @@
+.home-conatiner {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.img-left {
+  width: 50%;
+  height: 100vh;
+  background: url("../../../public/assets/images/Coding-Background.jpg");
+  background-size: cover;
+}
+.login-right {
+  width: 50%;
+  height: 100vh;
+  background: radial-gradient(#e66465, #9198e5);
+}
+
