@@ -61,7 +61,11 @@ export const getUser =async(req,res)=>{
 // Update User
 export const updateUser =async(req,res)=>{
     const email=req.user.email
-    const user=await User.findOneAndUpdate({email})
+    const updatedEmail=req.body.email;
+    if(!emailPattern.test(updatedEmail)){
+        return res.status(400).send("Invalid Format Email")
+    }
+    const user=await User.findOneAndUpdate({email},req.body,{new:true,useFindAndModify:false})
     if(!user) return res.status(400).send("User Not Found")
     user.password=undefined
     res.json({user:user})

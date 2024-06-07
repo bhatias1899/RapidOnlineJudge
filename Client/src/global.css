@@ -9,15 +9,107 @@
   justify-content: center;
   align-items: center;
 }
-.app-links{
-    color: #4a4af0;
+.app-links {
+  color: #4a4af0;
 }
-.f-12{
-    font-size: .75rem;
+.f-12 {
+  font-size: 0.75rem;
 }
-.f-16{
-    font-size: 1rem;
+.f-16 {
+  font-size: 1rem;
 }
-.d-none{
+.d-none {
   display: none;
 }
+div {
+  color: #fafafa;
+}
+
+label{
+  color: #080808;
+}
+button {
+  padding: 0.5rem 1rem;
+  color: #fafafa;
+  background: #343a40;
+  border-radius: 0.5rem;
+  margin-bottom: 0.5rem;
+  cursor: pointer;
+}
+.modal-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  max-height: 80vh;
+  overflow-y: scroll;
+}
+.close {
+  color: #080808;
+  /* float: right; */
+  font-size: 30px;
+  font-weight: bold;
+  position: absolute;
+  right: 1rem;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.j-c-s-b {
+  justify-content: space-between;
+}
+
+.j-c-c{
+  justify-content: center;
+}
+
+.a-i-c{
+  align-items: center;
+}
+
+.m-l-1 {
+  margin-left: 1rem;
+}
+
+.m-r-1{
+  margin-right: 1rem;
+}
+
+.pos-abs {
+  position: absolute;
+}
+.pos-rel {
+  position: relative;
+}
+.nowrap{
+  white-space: nowrap;
+}
+
+.t-50{
+  top: 50%;
+}
+.l-50{
+  left:50%;
+}
+
+::-webkit-scrollbar {
+  width: 4px; /* Width of the scrollbar */
+}
+
+::-webkit-scrollbar-track {
+  /* background: #f1f1f1;  */
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888; /* Thumb color */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555; /* Thumb hover color */
+}
+

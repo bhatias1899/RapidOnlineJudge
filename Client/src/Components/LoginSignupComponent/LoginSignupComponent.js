@@ -9,6 +9,7 @@ import {
 } from "../../Constants";
 import { useDispatch, useSelector } from "react-redux";
 import { createUser, loginUser } from "../../Actions/UserAction";
+import { allFieldsFilled, fieldsToUserMapping } from "../../common";
 
 const LoginSignupComponent = () => {
   const [isNewUser, setIsNewUser] = useState(false);
@@ -20,43 +21,33 @@ const LoginSignupComponent = () => {
   const user = useSelector((state) => state.user.userData);
 
   useEffect(() => {
-    if (user && typeof user=== "object") {
+    if (user && typeof user === "object") {
       navigate("/dashboard");
     } else {
       setFields(isNewUser ? SIGNIN_FIELDS : LOGIN_FIELDS);
-      setButtons(isNewUser ? SIGNIN_BUTTONS : LOGIN_BUTTONS); 
+      setButtons(isNewUser ? SIGNIN_BUTTONS : LOGIN_BUTTONS);
     }
   }, [user]);
 
-  const handleEvents = (name, ref) => {
-    if (name === "Log In") handleLogIn(ref);
+  const handleEvents = (name,updatedfields) => {
+    if (name === "Log In") handleLogIn(updatedfields);
     else if (name === "Forgot password") handleForgotPassword();
-    else if (name === "Sign Up") handleSignUp(ref);
-    else changeTab();
+    else if (name === "Sign Up") handleSignUp(updatedfields);
+   else changeTab();
   };
-  const handleLogIn = (ref) => {
-    getValues(ref);
+  const handleLogIn = (updatedFields) => {
+    // getValues(ref);
 
-    if (allFieldsFilled()) {
-      let payload = {
-        email: fields[0].value,
-        password: fields[1].value,
-      };
-      dispatch(loginUser(payload));
+    if (allFieldsFilled(updatedFields)) {
+      
+      dispatch(loginUser(fieldsToUserMapping(updatedFields)));
     } else alert("please fill all madatory fields");
   };
-  const handleSignUp = (ref) => {
-    getValues(ref);
-    if (allFieldsFilled()) {
-      let payload = {
-        firstname: fields[0].value,
-        lastname: fields[1].value,
-        email: fields[2].value,
-        password: fields[3].value,
-        profession: fields[5].value,
-        contact: fields[6].value,
-      };
-      dispatch(createUser(payload));
+  const handleSignUp = (updatedFields) => {
+    // getValues(ref);
+
+    if (allFieldsFilled(updatedFields)) {
+      dispatch(createUser(fieldsToUserMapping(updatedFields)));
     } else alert("please fill all madatory fields");
   };
   const handleForgotPassword = () => {
@@ -68,28 +59,26 @@ const LoginSignupComponent = () => {
     setIsNewUser(!isNewUser);
   };
 
-  const allFieldsFilled = () => {
-    return fields.filter((i) => i.isRequired && !i.value)?.length === 0;
-  };
+  // const getValues = (ref) => {
+  //   let inputs = ref.current.getElementsByClassName("input-container");
+  //   let newFields = [...fields];
+  //   for (let i = 0; i < inputs.length; i++) {
+  //     let ele = inputs[i].getElementsByTagName("input");
+  //     if (ele[0].type === "radio") {
+  //       for (let j = 0; j < ele.length; j++) {
+  //         if (ele[j].checked) {
+  //           newFields[i].value = ele[j].value;
+  //           break;
+  //         }
+  //       }
+  //     } else {
+  //       newFields[i].value = ele[0].value;
+  //     }
+  //   }
+  //   setFields(newFields);
+  // };
 
-  const getValues = (ref) => {
-    let inputs = ref.current.getElementsByClassName("input-container");
-    let newFields = [...fields];
-    for (let i = 0; i < inputs.length; i++) {
-      let ele = inputs[i].getElementsByTagName("input");
-      if (ele[0].type === "radio") {
-        for (let j = 0; j < ele.length; j++) {
-          if (ele[j].checked) {
-            newFields[i].value = ele[j].value;
-            break;
-          }
-        }
-      } else {
-        newFields[i].value = ele[0].value;
-      }
-    }
-    setFields(newFields);
-  };
+  
   return (
     <FormComponent
       title={isNewUser ? "login" : "signUp"}

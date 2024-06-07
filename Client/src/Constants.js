@@ -45,4 +45,38 @@ export const UPDATE_BUTTONS = [
   { name: "Cancel", type: "Button" },
   { name: "Update", type: "Button" },
 ];
+
+export const PROBLEM_BUTTONS = [
+  { name: "Cancel", type: "Button" },
+  { name: "Create", type: "Button" },
+];
+
+export const PROBLEM_FIELDS = [
+  { name: "Title", isRequired: true, type: "text", value: "" },
+  { name: "Description", isRequired: true, type: "textarea", value: "" },
+  { name: "Topic", isRequired: false, type: "text", value: "" },
+  {
+    name: "Difficulty",
+    isRequired: true,
+    type: "Select",
+    value: "",
+    options: ["Easy", "Medium", "Hard"],
+  },
+  {
+    name: "Status",
+    isRequired: true,
+    type: "Select",
+    value: "New",
+    options: ["New", "InProgress", "Done"],
+  },
+  { name: "TestCases", isRequired: true, type: "file", value: "", filedata:null },
+  { name: "Solution", isRequired: true, type: "file", value: "", filedata:null },
+  {
+    name: "Comments",
+    isRequired: false,
+    type: "textarea",
+    value: "",
+    placeholder: "You can add additional comments/hints/followups",
+  },
+];
 export const SERVER_BASE_URL = "http://localhost:5000";

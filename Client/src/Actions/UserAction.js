@@ -1,5 +1,12 @@
 import axios from "axios";
-import {CREATE_NEW_USER_API, DELETE_USER_API, GET_USER_API, LOGIN_USER_API, LOGOUT_USER_API, UPDATE_USER_API } from "../ApiEndpoints/apiEndpoint";
+import {
+  CREATE_NEW_USER_API,
+  DELETE_USER_API,
+  GET_USER_API,
+  LOGIN_USER_API,
+  LOGOUT_USER_API,
+  UPDATE_USER_API,
+} from "../ApiEndpoints/apiEndpoint";
 import * as actionType from "./actionTypes";
 import { SERVER_BASE_URL } from "../Constants";
 
@@ -46,7 +53,9 @@ export const fetchProfile = (changeStates) => {
 export const updateUser = (payload) => {
   return function (dispatch) {
     axios
-      .post(`${SERVER_BASE_URL}${UPDATE_USER_API}`, { withCredentials: true },payload)
+      .post(`${SERVER_BASE_URL}${UPDATE_USER_API}`, payload, {
+        withCredentials: true,
+      })
       .then((res) => {
         dispatch({
           type: actionType.LOGIN_USER,
@@ -54,10 +63,6 @@ export const updateUser = (payload) => {
         });
       })
       .catch((err) => {
-        dispatch({
-          type: actionType.LOGIN_USER_FAILED,
-          payload: err,
-        });
       });
   };
 };
@@ -73,10 +78,6 @@ export const deleteUser = () => {
         });
       })
       .catch((err) => {
-        dispatch({
-          type: actionType.LOGIN_USER_FAILED,
-          payload: err,
-        });
       });
   };
 };
@@ -101,7 +102,7 @@ export const loginUser = (payload) => {
   };
 };
 
-export const logoutUser=()=>{
+export const logoutUser = () => {
   return function (dispatch) {
     axios
       .get(`${SERVER_BASE_URL}${LOGOUT_USER_API}`, {
@@ -120,6 +121,4 @@ export const logoutUser=()=>{
         });
       });
   };
-}
-
-
+};
