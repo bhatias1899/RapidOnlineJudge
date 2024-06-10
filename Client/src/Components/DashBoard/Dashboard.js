@@ -49,7 +49,7 @@ const Dashboard = () => {
   };
 
   return (
-    <div>
+    <div className="h-100">
       <div
         className="profile-container cur-pointer d-flex j-c-s-b"
         ref={profileRef}

@@ -1,8 +1,16 @@
 import React, { useRef, useState } from "react";
 import "./FormComponent.css";
+import {
+  BtnBold,
+  BtnItalic,
+  Editor,
+  EditorProvider,
+  Toolbar,
+} from "react-simple-code-editor";
+import CustomEditor from "../EditorComponent/EditorComponent";
 const FormComponent = ({ title, fields, buttons, handleEvents }) => {
   const refForm = useRef(null);
-
+  const [html, setHtml] = useState("Add Your Description Here");
   const [updatedfields, setFields] = useState(fields);
 
   const handleChange = (e, ind) => {
@@ -15,7 +23,7 @@ const FormComponent = ({ title, fields, buttons, handleEvents }) => {
         name: e.target.files[0].name,
         file: e.target.files[0],
       };
-    } 
+    }
     setFields(temp);
   };
 
@@ -42,6 +50,8 @@ const FormComponent = ({ title, fields, buttons, handleEvents }) => {
                   );
                 })}
               </div>
+            ) : i.type === "editor" ? (
+              <CustomEditor value={i.value} onChange={handleChange} index={ind}/>
             ) : (
               <input
                 type={i.type}

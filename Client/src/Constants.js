@@ -53,7 +53,7 @@ export const PROBLEM_BUTTONS = [
 
 export const PROBLEM_FIELDS = [
   { name: "Title", isRequired: true, type: "text", value: "" },
-  { name: "Description", isRequired: true, type: "textarea", value: "" },
+  { name: "Description", isRequired: true, type: "editor", value: "" },
   { name: "Topic", isRequired: false, type: "text", value: "" },
   {
     name: "Difficulty",
@@ -69,8 +69,20 @@ export const PROBLEM_FIELDS = [
     value: "New",
     options: ["New", "InProgress", "Done"],
   },
-  { name: "TestCases", isRequired: true, type: "file", value: "", filedata:null },
-  { name: "Solution", isRequired: true, type: "file", value: "", filedata:null },
+  {
+    name: "TestCases",
+    isRequired: true,
+    type: "file",
+    value: "",
+    filedata: null,
+  },
+  {
+    name: "Solution",
+    isRequired: true,
+    type: "file",
+    value: "",
+    filedata: null,
+  },
   {
     name: "Comments",
     isRequired: false,
@@ -80,3 +92,26 @@ export const PROBLEM_FIELDS = [
   },
 ];
 export const SERVER_BASE_URL = "http://localhost:5000";
+
+export const stubCodes = {
+  java: `class Main {
+    public static void main(String[] args) {
+        System.out.println("Hello World");
+    }
+}`,
+  cpp: `// Online C++ compiler to run C++ program online
+#include <iostream>
+
+int main() {
+    // Write C++ code here
+    std::cout << "Try programiz.pro";
+
+    return 0;
+}`,
+  c: `#include <stdio.h>
+int main() {    
+    printf("Hello World!");
+    return 0;
+}`,
+  py: `print("Hello World!")`,
+};

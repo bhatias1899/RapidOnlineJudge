@@ -3,6 +3,10 @@
 # dependencies
 /node_modules
 /uploads
+/Controller/codes
+/Controller/output
+/Controller/inputs
+
 /.pnp
 .pnp.js
 
