@@ -1,3 +1,19 @@
 .compiler{
     
 }
+.outputbox{
+    background: #fafafa;
+    height: calc(100% - 1rem);
+    border-radius: .5rem;
+
+}
+.inputbox{
+    background: #fafafa;
+}
+.input-textarea{
+    height: calc(100% - 1rem);
+    border-radius: .5rem;
+}
+.input-textarea:focus-within{
+    outline: none;
+}

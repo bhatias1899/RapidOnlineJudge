@@ -28,6 +28,7 @@ const Dashboard = () => {
   useEffect(() => {
     dispatch(getProblems());
   }, [dialogModalOpen]);
+  const Navigate=useNavigate();
 
   const handleEvents = (name, updatedFields) => {
     if (name.includes("Create")) {
@@ -59,6 +60,8 @@ const Dashboard = () => {
       </div>
 
       <button onClick={() => setDialogModalOpen(true)}>+ Add a problem</button>
+      <button onClick={() => Navigate('/compiler')} className="m-l-1">Open Compiler</button>
+
       {problemsData && (
         <ol>
           {problemsData.map((i, ind) => (

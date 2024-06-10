@@ -16,7 +16,7 @@ function App() {
       <AuthProvider>
         <BrowserRouter>
           <Routes>
-            <Route path="/" Component={HomePageComponent}/>
+            <Route path="/" Component={HomePageComponent} />
             <Route path="/login" Component={HomePageComponent} />
             <Route
               path="/dashboard"
@@ -38,7 +38,15 @@ function App() {
               path="/problem/*"
               element={
                 <PrivateRoute>
-                  <ProblemComponent/>
+                  <ProblemComponent />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/compiler"
+              element={
+                <PrivateRoute>
+                  <ProblemComponent onlyCompiler={true} />
                 </PrivateRoute>
               }
             />

@@ -23,18 +23,29 @@ const CompilerComponent = () => {
   }`);
   const [language, setLanguage] = useState("cpp");
   const [output, setOutput] = useState("");
+
   const [inputOpen, setInputOpen] = useState(false);
+  const [inputValue, setInputValue] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     setCode(stubCodes[language]);
   }, [language]);
 
+  useEffect(() => {
+    if (output) {
+      setIsLoading(false);
+    }
+  }, [output]);
+
   const handleSubmit = async () => {
+    setOutput("");
+    setIsLoading(true);
+    setInputOpen(true);
     const payload = {
       language: language,
       code,
-      input: `4 
-      -4 2 5 10`,
+      input: inputValue,
     };
 
     try {
@@ -44,6 +55,10 @@ const CompilerComponent = () => {
     } catch (error) {
       console.log(error.response);
     }
+  };
+
+  const handleTestcaseClick = () => {
+    setInputOpen(!inputOpen);
   };
 
   return (
@@ -80,18 +95,40 @@ const CompilerComponent = () => {
       </div>
 
       {inputOpen && (
-        <div className="outputbox">
-          <p
-            style={{
-              fontFamily: '"Fira code", "Fira Mono", monospace',
-              fontSize: 12,
-            }}
-          >
-            {output}
-          </p>
+        <div className="d-flex j-c-s-b h-30 m-b-1">
+          <div className="input-box h-100 w-50">
+            <div className="f-14 fw-500">Inputs:</div>
+            <textarea
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              className="w-100 input-textarea"
+            />
+          </div>
+          <div className="h-100 w-50">
+            <div className="f-14 fw-500">Outputs:</div>
+            <div className="outputbox w-100">
+              <p
+                style={{
+                  fontFamily: "monospace",
+                  fontSize: 14,
+                  color: "#000000",
+                  margin: 0,
+                  wordBreak: "break-all",
+                  overflowX: "hidden",
+                  overflowY: "scroll",
+                  height: "inherit",
+                }}
+              >
+                {isLoading ? "Loading..." : output}
+              </p>
+            </div>
+          </div>
         </div>
       )}
       <div className="d-flex j-c-f-e">
+        <button className="sample-testcase m-r-1" onClick={handleTestcaseClick}>
+          <div className="f-14">Sample Testcase</div>
+        </button>
         <button onClick={handleSubmit} className="d-flex a-i-c" type="button">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -114,7 +151,11 @@ const CompilerComponent = () => {
           </svg>
           <div className="f-14">Run</div>
         </button>
-        <button onClick={handleSubmit} type="button" className="d-flex m-l-1 a-i-c">
+        <button
+          onClick={handleSubmit}
+          type="button"
+          className="d-flex m-l-1 a-i-c"
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
