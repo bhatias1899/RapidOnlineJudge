@@ -1,10 +1,14 @@
 .form-container {
-  width: fit-content;
+  /* width: fit-content; */
   border-radius: 0.5rem;
   box-shadow: #343a40 6px 10px;
   background: #f8f9fa;
   padding: 2rem;
+  width: calc(100% - 12rem);
+
 }
+
+
 
 .input-container {
   margin: 1rem 0rem;
@@ -16,6 +20,7 @@
 .input-container > input {
   display: flex;
   width: calc(100% - 2rem);
+  color: #000000;
 }
 .label{
   color: #000000;

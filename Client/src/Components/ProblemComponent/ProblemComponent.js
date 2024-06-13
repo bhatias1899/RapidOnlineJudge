@@ -15,13 +15,13 @@ const ProblemComponent = ({ onlyCompiler }) => {
     <div className="d-flex j-c-s-b pd-2">
       {!onlyCompiler && problemData && (
         <div className="problem-description w-50">
-          <p>{problemData.title}</p>
+          <p className="fw-600">{problemData.title}</p>
           {parse(problemData.description)}
         </div>
       )}
       <div className={`compiler ${onlyCompiler ? "w-100" : "w-50"}`}>
         {" "}
-        <CompilerComponent />
+        <CompilerComponent onlyCompiler={onlyCompiler} />
       </div>
     </div>
   );

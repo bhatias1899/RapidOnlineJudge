@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./FormComponent.css";
 import {
   BtnBold,
@@ -8,10 +8,11 @@ import {
   Toolbar,
 } from "react-simple-code-editor";
 import CustomEditor from "../EditorComponent/EditorComponent";
-const FormComponent = ({ title, fields, buttons, handleEvents }) => {
+const FormComponent = ({ title, fields, buttons, handleEvents, wrapperClass }) => {
   const refForm = useRef(null);
   const [html, setHtml] = useState("Add Your Description Here");
   const [updatedfields, setFields] = useState(fields);
+
 
   const handleChange = (e, ind) => {
     console.log(e.target);
@@ -28,7 +29,7 @@ const FormComponent = ({ title, fields, buttons, handleEvents }) => {
   };
 
   return (
-    <div className="form-container" ref={refForm}>
+    <div className={`form-container ${wrapperClass?wrapperClass:""}`} ref={refForm}>
       {updatedfields?.map((i, ind) => {
         return (
           <div className="input-container">

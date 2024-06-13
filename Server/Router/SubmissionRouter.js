@@ -2,9 +2,9 @@ import express from 'express';
 import { authenticateToken } from '../common.js';
 import { runCode, verdictCode } from '../Controller/CompilerController.js';
 
-const CompilerRouter=express.Router();
-CompilerRouter.post("/",runCode)
+const SubmissionRouter=express.Router();
+SubmissionRouter.post("/",verdictCode)
 
 
 
-export default CompilerRouter;
+export default SubmissionRouter;

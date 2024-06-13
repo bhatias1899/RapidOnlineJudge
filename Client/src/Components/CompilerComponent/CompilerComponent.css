@@ -5,8 +5,12 @@
     background: #fafafa;
     height: calc(100% - 1rem);
     border-radius: .5rem;
-
+    overflow-y: scroll;
+    white-space: wrap;
+    word-break: break-all;
+    color: #000000;
 }
+
 .inputbox{
     background: #fafafa;
 }
@@ -16,4 +20,18 @@
 }
 .input-textarea:focus-within{
     outline: none;
+}
+
+.verdict-chips{
+    padding: .5rem;
+    white-space: nowrap;
+    color: fafafa;
+    font-size: .875rem;
+    margin: 0 .5rem .5rem 0rem;
+    border-radius: .5rem;
+
+}
+
+.pd-1{
+    padding: 1rem;
 }

@@ -59,24 +59,7 @@ const LoginSignupComponent = () => {
     setIsNewUser(!isNewUser);
   };
 
-  // const getValues = (ref) => {
-  //   let inputs = ref.current.getElementsByClassName("input-container");
-  //   let newFields = [...fields];
-  //   for (let i = 0; i < inputs.length; i++) {
-  //     let ele = inputs[i].getElementsByTagName("input");
-  //     if (ele[0].type === "radio") {
-  //       for (let j = 0; j < ele.length; j++) {
-  //         if (ele[j].checked) {
-  //           newFields[i].value = ele[j].value;
-  //           break;
-  //         }
-  //       }
-  //     } else {
-  //       newFields[i].value = ele[0].value;
-  //     }
-  //   }
-  //   setFields(newFields);
-  // };
+  
 
   
   return (

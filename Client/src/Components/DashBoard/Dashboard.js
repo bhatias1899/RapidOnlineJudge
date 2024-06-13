@@ -17,7 +17,7 @@ import "./Dashboard.css";
 const Dashboard = () => {
   const userData = useSelector((state) => state.user.userData.user);
   const problemsData = useSelector((state) => state.problem.problemsData);
-
+  
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const profileRef = useRef();
@@ -25,9 +25,15 @@ const Dashboard = () => {
   const [dialogModalOpen, setDialogModalOpen] = useState(false);
   const [openDrawer, setOpenDrawer] = useState(false);
 
-  useEffect(() => {
-    dispatch(getProblems());
-  }, [dialogModalOpen]);
+  useEffect(()=>{
+    PROBLEM_FIELDS.forEach(i=>i.value="");
+  },[dialogModalOpen])
+
+  useEffect(()=>{
+    dispatch(getProblems())
+  },[])
+
+  
   const Navigate=useNavigate();
 
   const handleEvents = (name, updatedFields) => {
@@ -50,7 +56,7 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="h-100">
+    <div className="h-100 o-y-auto">
       <div
         className="profile-container cur-pointer d-flex j-c-s-b"
         ref={profileRef}
@@ -75,7 +81,7 @@ const Dashboard = () => {
         </ol>
       )}
       {dialogModalOpen && (
-        <div className="modal-container">
+        <div className="modal-container w-50">
           <div className="close" onClick={() => setDialogModalOpen(false)}>
             &times;
           </div>
@@ -84,6 +90,7 @@ const Dashboard = () => {
             fields={PROBLEM_FIELDS}
             buttons={PROBLEM_BUTTONS}
             handleEvents={handleEvents}
+            wrapperClass={"w-100-4"}
           />
         </div>
       )}

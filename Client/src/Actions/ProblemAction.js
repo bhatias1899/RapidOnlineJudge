@@ -18,6 +18,7 @@ export const createProblem = (payload) => {
           type: CREATE_NEW_PROBLEM,
           payload: res.data,
         });
+        dispatch(getProblems());
       })
       .catch((err) => {
         dispatch({
