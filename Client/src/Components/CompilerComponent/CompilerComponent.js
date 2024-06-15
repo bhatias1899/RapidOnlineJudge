@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Editor from "react-simple-code-editor";
 import { highlight, languages } from "prismjs/components/prism-core";
 import "prismjs/components/prism-clike";
@@ -7,6 +7,7 @@ import "prismjs/themes/prism.css";
 import axios from "axios";
 import "./CompilerComponent.css";
 import { stubCodes } from "../../Constants";
+import allImages from "../../allImages";
 
 const CompilerComponent = ({ onlyCompiler }) => {
   const [code, setCode] = useState(`
@@ -24,9 +25,9 @@ const CompilerComponent = ({ onlyCompiler }) => {
   const [language, setLanguage] = useState("cpp");
   const [output, setOutput] = useState("");
   const [verdicts, setVerdicts] = useState([]);
+  const [openModel, setOpenModal] = useState(false);
 
-  const [inputOpen, setInputOpen] = useState(false);
-  const [verdictOpen, setVerdictOpen] = useState(false);
+  const [openIndex, setOpenIndex] = useState(-1);
   const [inputValue, setInputValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
@@ -46,8 +47,7 @@ const CompilerComponent = ({ onlyCompiler }) => {
     setError("");
     setOutput("");
     setIsLoading(true);
-    setInputOpen(true);
-    setVerdictOpen(false);
+    setOpenIndex(1);
     const payload = {
       language: language,
       code,
@@ -71,8 +71,7 @@ const CompilerComponent = ({ onlyCompiler }) => {
     setError("");
     setVerdicts([]);
     setIsLoading(true);
-    setInputOpen(false);
-    setVerdictOpen(true);
+    setOpenIndex(2);
     const payload = {
       language: language,
       code,
@@ -97,16 +96,70 @@ const CompilerComponent = ({ onlyCompiler }) => {
   };
 
   const handleTestcaseClick = () => {
-    setInputOpen(!inputOpen);
-    setVerdictOpen(false);
+    openIndex > 0 ? setOpenIndex(-1) : setOpenIndex(0);
+  };
+  const handleMaximizeClick = () => {
+    setOpenModal(!openModel);
   };
 
-  const handleClose = (val) => {
-    val == "input" ? setInputOpen(false) : setVerdictOpen(false);
-  };
+  const outputContent = (
+    <div className="outputbox w-100 ">
+      <p
+        style={{
+          fontFamily: "monospace",
+          fontSize: 14,
+          color: "#000000",
+          margin: 0,
+          wordBreak: "break-all",
+          overflowX: "hidden",
+          overflowY: "scroll",
+          height: "calc(100% - 3rem)",
+          padding: "1rem",
+        }}
+      >
+        {isLoading ? "Loading..." : error ? error : output}
+      </p>
+
+      <div
+        className="pos-abs rt-1 bt-1 cur-pointer"
+        onClick={handleMaximizeClick}
+      >
+        <img
+          className="h-16 w-16"
+          src={openModel ? allImages.minimize : allImages.maximize}
+        />
+      </div>
+    </div>
+  );
+
+  const verdictContent = (
+    <div className="outputbox w-100">
+      <div className="d-flex fw-wrap pd-1 col-black">
+        {isLoading
+          ? "Loading..."
+          : error
+            ? error
+            : verdicts.map((i, ind) => (
+                <div
+                  className={`${i.pass ? "bg-green" : "bg-red"} verdict-chips`}
+                >{`TESTCASE ${ind}`}</div>
+              ))}
+      </div>
+
+      <div
+        className="pos-abs rt-1 bt-1 cur-pointer"
+        onClick={() => handleMaximizeClick(outputContent)}
+      >
+        <img
+          className="h-16 w-16"
+          src={openModel ? allImages.minimize : allImages.maximize}
+        />
+      </div>
+    </div>
+  );
 
   return (
-    <div className="compiler-container h-100">
+    <div className="compiler-container h-100 ">
       <select
         onChange={(e) => {
           setLanguage(e.target.value);
@@ -118,7 +171,9 @@ const CompilerComponent = ({ onlyCompiler }) => {
         <option value="py">Python</option>
         <option value="java">Java</option>
       </select>
-      <div className={`compiler-editor  m-b-1 ${!inputOpen ? "h-80" : "h-50"}`}>
+      <div
+        className={`compiler-editor  m-b-1 ${openIndex < 0 ? "h-80" : "h-50"}`}
+      >
         <Editor
           value={code}
           onValueChange={(code) => setCode(code)}
@@ -137,69 +192,54 @@ const CompilerComponent = ({ onlyCompiler }) => {
           }}
         />
       </div>
-
-      {inputOpen && (
-        <div className="d-flex j-c-s-b h-30 m-b-1">
-          <div className="close" onClick={() => handleClose("input")}>
-            &times;
+      {openIndex >= 0 && (
+        <div className="d-flex j-c-s-a aic  tab-container">
+          <div
+            className={`"f-16 f-w-500 cur-pointer  ${
+              openIndex === 0 ? "tab-selected" : ""
+            }`}
+            onClick={() => setOpenIndex(0)}
+          >
+            Input
           </div>
-          <div className="input-box h-100 w-50">
-            <div className="f-14 fw-500">Inputs:</div>
+          <div
+            className={`"f-16 f-w-500 m-l-1 cur-pointer  ${
+              openIndex === 1 ? "tab-selected" : ""
+            }`}
+            onClick={() => setOpenIndex(1)}
+          >
+            Output
+          </div>
+          <div
+            className={`"f-16 f-w-500 m-l-1 ${
+              openIndex === 2 ? "tab-selected" : ""
+            }`}
+          >
+            Verdict
+          </div>
+        </div>
+      )}
+      {openIndex === 0 ? (
+        <div className="d-flex j-c-s-b h-25 m-b-1">
+          <div className="input-box h-100 w-100">
             <textarea
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               className="w-100 input-textarea"
             />
           </div>
-          <div className="h-100 w-50">
-            <div className="f-14 fw-500">Outputs:</div>
-            <div className="outputbox w-100">
-              <p
-                style={{
-                  fontFamily: "monospace",
-                  fontSize: 14,
-                  color: "#000000",
-                  margin: 0,
-                  wordBreak: "break-all",
-                  overflowX: "hidden",
-                  overflowY: "scroll",
-                  height: "calc(100% - 3rem)",
-                  padding: "1rem",
-                }}
-              >
-                {isLoading ? "Loading..." : error ? error : output}
-              </p>
-            </div>
-          </div>
         </div>
-      )}
-      {verdictOpen && (
-        <div className="d-flex j-c-s-b h-30 m-b-1">
-          <div className="close" onClick={() => handleClose()}>
-            &times;
-          </div>
-          <div className="h-100 w-100">
-            <div className="f-14 fw-500">Verdict:</div>
-            <div className="outputbox w-100">
-              <div className="d-flex fw-wrap pd-1 col-black">
-                {isLoading
-                  ? "Loading..."
-                  : error
-                    ? error
-                    : verdicts.map((i, ind) => (
-                        <div
-                          className={`${
-                            i.pass ? "bg-green" : "bg-red"
-                          } verdict-chips`}
-                        >{`TESTCASE ${ind}`}</div>
-                      ))}
-              </div>
-            </div>
-          </div>
+      ) : openIndex === 1 ? (
+        <div className="h-25 w-100">{outputContent}</div>
+      ) : openIndex === 2 ? (
+        <div className="d-flex j-c-s-b h-25 m-b-1">
+          <div className="h-100 w-100">{verdictContent}</div>
         </div>
+      ) : (
+        <></>
       )}
       <div className="d-flex j-c-f-e a-i-c">
-        {!isLoading && verdictOpen && (
+        {!isLoading && openIndex === 2 && (
           <div className="m-r-1">{`${verdicts.filter((i) => i.pass).length}/${
             verdicts.length
           } Testcases Passed`}</div>
@@ -258,6 +298,9 @@ const CompilerComponent = ({ onlyCompiler }) => {
           </button>
         )}
       </div>
+      <dialog className="pos-abs dialogoutput" open={openModel}>
+        {openIndex == 1 ? outputContent : verdictContent}
+      </dialog>
     </div>
   );
 };

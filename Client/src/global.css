@@ -39,10 +39,10 @@ input {
   font-family: monospace;
   background: #fafafa;
 }
-input:focus-within{
+input:focus-within {
   outline: none;
 }
-input:focus-visible{
+input:focus-visible {
   outline: #4a4af0;
 }
 button {
@@ -86,6 +86,9 @@ button > svg {
 .j-c-s-b {
   justify-content: space-between;
 }
+.j-c-s-a {
+  justify-content: space-around;
+}
 
 .j-c-c {
   justify-content: center;
@@ -111,7 +114,7 @@ button > svg {
   margin-bottom: 1rem;
 }
 
-.fw-600{
+.fw-600 {
   font-weight: 600;
 }
 
@@ -138,7 +141,7 @@ button > svg {
   width: 45% !important;
 }
 
-.o-y-auto{
+.o-y-auto {
   overflow-y: auto;
 }
 .h-50 {
@@ -149,26 +152,40 @@ button > svg {
   height: 80%;
 }
 
-.h-30 {
-  height: 30%;
+.h-25 {
+  height: 25%;
 }
 .h-100 {
   height: 100%;
+}
+
+.h-16{
+  height: 1rem;
+}
+
+.w-16{
+  width: 1rem;
 }
 
 .w-100 {
   width: 100%;
 }
 
-.w-100-4{
-  width: calc(100% - 4rem)!important;
-}
-
-.w-100-12{
+.w-100-4 {
   width: calc(100% - 4rem) !important;
 }
 
+.w-100-12 {
+  width: calc(100% - 4rem) !important;
+}
 
+.rt-1{
+  right: 1rem;
+}
+
+.bt-1{
+  bottom: 1rem;
+}
 
 .bg-green {
   background: green;
@@ -181,6 +198,13 @@ button > svg {
 .fw-wrap {
   flex-wrap: wrap;
 }
+dialog{
+  height: 75%;
+  width: 75%;
+  overflow: scroll;
+  border-radius: .5rem;
+  backdrop-filter: blur(10px);
+}
 .dropdown {
   width: 50%;
   padding: 0.25rem 0.5rem;
@@ -190,6 +214,19 @@ button > svg {
 }
 .dropdown:focus-visible {
   outline: none;
+}
+
+.tab-container {
+  margin: 0.5rem;
+}
+.tab-container > div {
+  padding: 0.5rem 1rem;
+}
+.tab-selected {
+  border-bottom: 3px solid #343a40;
+  background: #fafafa;
+  color: #080808;
+  border-radius: 0.5rem;
 }
 
 .col-black {

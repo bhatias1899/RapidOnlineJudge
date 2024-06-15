@@ -9,6 +9,10 @@
     white-space: wrap;
     word-break: break-all;
     color: #000000;
+    position: relative;
+}
+.dialogoutput{
+    top: 2rem;
 }
 
 .inputbox{
