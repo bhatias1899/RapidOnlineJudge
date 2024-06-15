@@ -8,11 +8,16 @@ import {
   Toolbar,
 } from "react-simple-code-editor";
 import CustomEditor from "../EditorComponent/EditorComponent";
-const FormComponent = ({ title, fields, buttons, handleEvents, wrapperClass }) => {
+const FormComponent = ({
+  title,
+  fields,
+  buttons,
+  handleEvents,
+  wrapperClass,
+}) => {
   const refForm = useRef(null);
   const [html, setHtml] = useState("Add Your Description Here");
   const [updatedfields, setFields] = useState(fields);
-
 
   const handleChange = (e, ind) => {
     console.log(e.target);
@@ -29,7 +34,10 @@ const FormComponent = ({ title, fields, buttons, handleEvents, wrapperClass }) =
   };
 
   return (
-    <div className={`form-container ${wrapperClass?wrapperClass:""}`} ref={refForm}>
+    <div
+      className={`form-container ${wrapperClass ? wrapperClass : ""}`}
+      ref={refForm}
+    >
       {updatedfields?.map((i, ind) => {
         return (
           <div className="input-container">
@@ -52,7 +60,11 @@ const FormComponent = ({ title, fields, buttons, handleEvents, wrapperClass }) =
                 })}
               </div>
             ) : i.type === "editor" ? (
-              <CustomEditor value={i.value} onChange={handleChange} index={ind}/>
+              <CustomEditor
+                value={i.value}
+                onChange={handleChange}
+                index={ind}
+              />
             ) : (
               <input
                 type={i.type}
@@ -65,22 +77,30 @@ const FormComponent = ({ title, fields, buttons, handleEvents, wrapperClass }) =
           </div>
         );
       })}
-
+      <div className="d-flex j-c-c">
+        {buttons?.map((i) => {
+          return (
+            i.type === "Button" && (
+              <button
+                className="form-button cur-pointer m-r-1"
+                onClick={() => handleEvents(i.name, updatedfields)}
+              >
+                {i.name}
+              </button>
+            )
+          );
+        })}
+      </div>
       {buttons?.map((i) => {
-        return i.type === "Button" ? (
-          <button
-            className="form-button cur-pointer m-r-1"
-            onClick={() => handleEvents(i.name, updatedfields)}
-          >
-            {i.name}
-          </button>
-        ) : (
-          <div
-            className="app-links cur-pointer f-12"
-            onClick={() => handleEvents(i.name, updatedfields)}
-          >
-            {i.name}
-          </div>
+        return (
+          i.type !== "Button" && (
+            <div
+              className="app-links cur-pointer f-12"
+              onClick={() => handleEvents(i.name, updatedfields)}
+            >
+              {i.name}
+            </div>
+          )
         );
       })}
     </div>

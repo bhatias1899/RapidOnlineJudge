@@ -87,38 +87,6 @@ export const generateFile=async(language,code,input)=>{
     return {filepath,inputfilepath};
 }
 
-// ${ input &&`< ${inputFile}`}
-
-// export const executeCpp=(filepath,input)=>{
-//     const dirOutput=path.join(__dirname,'output');
-//     if(!fs.existsSync(dirOutput)){
-//         fs.mkdirSync(dirOutput);
-//     }
-    
-//     const filename=`${path.basename(filepath).split(".")[0]}.exe`;
-//     const outPath=path.join(dirOutput,filename);
-//     try{
-//         return new Promise((resolve,reject)=>{
-//             exec(`g++ ${filepath} -o ${outPath} && cd ${dirOutput} && .\\${filename} ${ input &&`< ${input}`} `,(err,stdout,stderr)=>{
-//                 if(err){
-//                     reject({err,stderr});
-//                     console.log("problem lies here?? finally");
-//                 }
-//                 if(stderr){
-//                     reject(stderr);
-//                     console.log("problem lies here?? finally");
-//                 }
-//                 resolve(stdout);
-//             })
-//         });
-//     }
-
-
-//     catch(err){
-//         console.log(err,"problem lies here??")
-//     }
-
-// }
 
 const executeCpp = (filepath, inputFilePath) => {
     const dirOutput = path.join(__dirname, 'output');
@@ -126,7 +94,7 @@ const executeCpp = (filepath, inputFilePath) => {
         fs.mkdirSync(dirOutput);
     }
 
-    const filename = `${path.basename(filepath).split(".")[0]}.exe`;
+    const filename = `${path.basename(filepath).split(".")[0]}.out`;
     const outPath = path.join(dirOutput, filename);
 
     return new Promise((resolve, reject) => {
@@ -203,7 +171,7 @@ export const executeC=(filepath,input)=>{
         fs.mkdirSync(dirOutput);
     }
     
-    const filename=`${path.basename(filepath).split(".")[0]}.exe`;
+    const filename=`${path.basename(filepath).split(".")[0]}.out`;
     const outPath=path.join(dirOutput,filename);
     
     try{

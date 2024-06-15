@@ -64,10 +64,10 @@ const Dashboard = () => {
       >
         <img src={allImages.gear}></img>
       </div>
-
+      <div className="d-flex j-c-c">
       <button onClick={() => setDialogModalOpen(true)}>+ Add a problem</button>
       <button onClick={() => Navigate('/compiler')} className="m-l-1">Open Compiler</button>
-
+      </div>
       {problemsData && (
         <ol>
           {problemsData.map((i, ind) => (
