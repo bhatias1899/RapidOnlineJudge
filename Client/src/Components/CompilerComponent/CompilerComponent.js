@@ -31,17 +31,14 @@ const CompilerComponent = ({ onlyCompiler }) => {
   const [inputValue, setInputValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  
+
 
   useEffect(() => {
     setCode(stubCodes[language]);
   }, [language]);
 
-  useEffect(() => {
-    if (output || error || verdicts.length > 0) {
-      setIsLoading(false);
-      console.log(error);
-    }
-  }, [output, error, verdicts]);
+ 
 
   const handleRun = async () => {
     setError("");
@@ -58,12 +55,17 @@ const CompilerComponent = ({ onlyCompiler }) => {
       const { data } = await axios.post("http://localhost:5000/run", payload);
       console.log(data);
       data.success
-        ? setOutput(data.output[0].stdout)
-        : data.err.stderr
-          ? setError(data.err.stderr)
+        ? setOutput(data.stdout)
+        : data.stderr
+          ? setError(data.stderr)
           : setError(data.err);
+
+      setIsLoading(false);
+      
     } catch (error) {
       console.log(error.response);
+      setIsLoading(false);
+
     }
   };
 
@@ -90,8 +92,12 @@ const CompilerComponent = ({ onlyCompiler }) => {
         : data.err.stderr
           ? setError(data.err.stderr)
           : setError(data.err);
+      setIsLoading(false);
+      
     } catch (error) {
       console.log(error.response);
+      setIsLoading(false);
+
     }
   };
 
@@ -172,7 +178,7 @@ const CompilerComponent = ({ onlyCompiler }) => {
         <option value="java">Java</option>
       </select>
       <div
-        className={`compiler-editor  m-b-1 ${openIndex < 0 ? "h-80" : "h-50"}`}
+        className={`compiler-editor  m-b-1 ${openIndex < 0 ? "mh-80" : "mh-50"}`}
       >
         <Editor
           value={code}
@@ -185,7 +191,7 @@ const CompilerComponent = ({ onlyCompiler }) => {
             outline: "none",
             border: "none",
             backgroundColor: "#000000",
-            caretColor: "#fafafa",
+            caretColor: "#697682",
             height: "100%",
             overflowY: "auto",
             borderRadius: ".5rem",
@@ -245,7 +251,7 @@ const CompilerComponent = ({ onlyCompiler }) => {
           } Testcases Passed`}</div>
         )}
         <button className="sample-testcase m-r-1" onClick={handleTestcaseClick}>
-          <div className="f-14">Sample Testcase</div>
+          <div className="f-14 col-white">Sample Testcase</div>
         </button>
         <button onClick={handleRun} className="d-flex a-i-c" type="button">
           <svg
@@ -267,7 +273,7 @@ const CompilerComponent = ({ onlyCompiler }) => {
               d="M15.91 11.672a.375.375 0 0 1 0 .656l-5.603 3.113a.375.375 0 0 1-.557-.328V8.887c0-.286.307-.466.557-.327l5.603 3.112Z"
             />
           </svg>
-          <div className="f-14">Run</div>
+          <div className="f-14 col-white">Run</div>
         </button>
         {!onlyCompiler && (
           <button
@@ -294,7 +300,7 @@ const CompilerComponent = ({ onlyCompiler }) => {
                 d="M15.91 11.672a.375.375 0 0 1 0 .656l-5.603 3.113a.375.375 0 0 1-.557-.328V8.887c0-.286.307-.466.557-.327l5.603 3.112Z"
               />
             </svg>
-            <div className="f-14">Submit</div>
+            <div className="f-14 col-white">Submit</div>
           </button>
         )}
       </div>

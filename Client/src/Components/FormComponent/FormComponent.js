@@ -18,7 +18,13 @@ const FormComponent = ({
   const refForm = useRef(null);
   const [html, setHtml] = useState("Add Your Description Here");
   const [updatedfields, setFields] = useState(fields);
+  // const [buttons, setButtons] = useState(fields);
 
+  console.log(title, fields, buttons, handleEvents, wrapperClass, "@111");
+
+  useEffect(() => {
+    setFields(fields);
+  }, [fields, buttons]);
   const handleChange = (e, ind) => {
     console.log(e.target);
     let temp = [...updatedfields];
@@ -91,18 +97,19 @@ const FormComponent = ({
           );
         })}
       </div>
-      {buttons?.map((i) => {
-        return (
-          i.type !== "Button" && (
-            <div
-              className="app-links cur-pointer f-12"
-              onClick={() => handleEvents(i.name, updatedfields)}
-            >
-              {i.name}
-            </div>
-          )
-        );
-      })}
+      
+        {buttons?.map((i) => {
+          return (
+            i.type !== "Button" && (
+              <div
+                className="app-links cur-pointer f-14 m-b-8 t-a-c"
+                onClick={() => handleEvents(i.name, updatedfields)}
+              >
+                {i.name}
+              </div>
+            )
+          );
+        })}
     </div>
   );
 };

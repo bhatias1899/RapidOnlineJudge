@@ -98,7 +98,11 @@ export const stubCodes = {
     public static void main(String[] args) {
         System.out.println("Hello World");
     }
-}`,
+}
+    
+
+
+`,
   cpp: `// Online C++ compiler to run C++ program online
 #include <iostream>
 
@@ -107,11 +111,25 @@ int main() {
     std::cout << "Hello world";
 
     return 0;
-}`,
+}
+    
+
+`,
   c: `#include <stdio.h>
 int main() {    
     printf("Hello World!");
     return 0;
-}`,
-  py: `print("Hello World!")`,
+}
+    
+
+`,
+  py: `
+  
+  print("Hello World!")
+  
+  
+  
+  
+  
+  `,
 };

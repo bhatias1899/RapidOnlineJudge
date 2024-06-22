@@ -1,6 +1,6 @@
 import "./App.css";
 import "./global.css";
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import HomePageComponent from "./Components/HomePageComponent/HomePageComponent";
 import Dashboard from "./Components/DashBoard/Dashboard";
 import { AuthProvider } from "./AuthProvider";
@@ -15,6 +15,7 @@ function App() {
     <div className="App">
       <AuthProvider>
         <BrowserRouter>
+          
           <Routes>
             <Route path="/" Component={HomePageComponent} />
             <Route path="/login" Component={HomePageComponent} />

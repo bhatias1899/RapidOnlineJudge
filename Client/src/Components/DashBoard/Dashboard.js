@@ -13,28 +13,46 @@ import { createProblem, getProblems } from "../../Actions/ProblemAction";
 import allImages from "../../allImages";
 import DrawerComponent from "../../Utils/DrawerComponent/DrawerComponent";
 import "./Dashboard.css";
+import CustomCheckbox from "../../Utils/CheckBoxComponent/CustomCheckbox";
 
 const Dashboard = () => {
   const userData = useSelector((state) => state.user.userData.user);
+  console.log(userData, "user data");
   const problemsData = useSelector((state) => state.problem.problemsData);
-  
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const profileRef = useRef();
 
   const [dialogModalOpen, setDialogModalOpen] = useState(false);
+  const [openCheckBoxes, setOpenCheckboxes] = useState(false);
+  const [checkedArray, setCheckedArray] = useState([]);
+  const [contestSubmitted, setContestSubmitted] = useState(false);
+
   const [openDrawer, setOpenDrawer] = useState(false);
 
-  useEffect(()=>{
-    PROBLEM_FIELDS.forEach(i=>i.value="");
-  },[dialogModalOpen])
+  useEffect(() => {
+    PROBLEM_FIELDS.forEach((i) => (i.value = ""));
+  }, [dialogModalOpen]);
 
-  useEffect(()=>{
-    dispatch(getProblems())
-  },[])
+  useEffect(() => {
+    dispatch(getProblems());
+  }, []);
 
-  
-  const Navigate=useNavigate();
+  useEffect(() => {
+    if (problemsData) {
+      setCheckedArray(new Array(problemsData?.length).fill(false));
+    }
+  }, [problemsData]);
+
+  useEffect(() => {
+    if (!dialogModalOpen) {
+      setOpenCheckboxes(false);
+      setCheckedArray(new Array(problemsData?.length).fill(false));
+    }
+  }, [dialogModalOpen]);
+
+  const Navigate = useNavigate();
 
   const handleEvents = (name, updatedFields) => {
     if (name.includes("Create")) {
@@ -48,11 +66,36 @@ const Dashboard = () => {
   };
 
   const handleProblem = (i) => {
-    navigate(`/problem/${i._id}`);
+    if (!openCheckBoxes) {
+      navigate(`/problem/${i._id}`);
+    }
   };
 
   const handleProfileIconClick = () => {
     setOpenDrawer(true);
+  };
+
+  const handleContestClick = () => {
+    if (openCheckBoxes) {
+      setContestSubmitted(true);
+      setOpenCheckboxes(false);
+      setCheckedArray(new Array(problemsData?.length).fill(false));
+    } else {
+      setOpenCheckboxes(true);
+    }
+  };
+
+  const submitContest = () => {
+    setContestSubmitted(true);
+    setDialogModalOpen(false);
+  };
+  const handleCheckedArray = (e, ind) => {
+    e.stopPropagation();
+    setCheckedArray([
+      ...checkedArray.slice(0, ind),
+      !checkedArray[ind],
+      ...checkedArray.slice(ind + 1),
+    ]);
   };
 
   return (
@@ -65,13 +108,45 @@ const Dashboard = () => {
         <img src={allImages.gear}></img>
       </div>
       <div className="d-flex j-c-c">
-      <button onClick={() => setDialogModalOpen(true)}>+ Add a problem</button>
-      <button onClick={() => Navigate('/compiler')} className="m-l-1">Open Compiler</button>
+        {userData.profession === "Recruiter" ||
+        userData.profession === "admin" ? (
+          <>
+            <button onClick={() => setDialogModalOpen(true)}>
+              + Add a problem
+            </button>
+            <button onClick={() => handleContestClick(true)} className="m-l-1">
+              {openCheckBoxes ? "Submit Contest" : "Create Contest"}
+            </button>
+          </>
+        ) : (
+          <button onClick={() => Navigate("/compiler")} className="m-l-1">
+            Open Compiler
+          </button>
+        )}
       </div>
-      {problemsData && (
+      {contestSubmitted ? (
+        <div>
+          <div className="d-flex j-c-c a-i-c">
+            <h1>Your Contest Is Created Succesfully</h1>
+          </div>
+          <div className="d-flex j-c-c a-i-c m-t-1">
+            <button onClick={() => setContestSubmitted(false)}>
+              Back to Problem
+            </button>
+          </div>
+        </div>
+      ) : problemsData ? (
         <ol>
           {problemsData.map((i, ind) => (
             <li className="cur-pointer" onClick={() => handleProblem(i)}>
+              {openCheckBoxes && (
+                <CustomCheckbox
+                  checked={checkedArray[ind]}
+                  handleClick={(e) => {
+                    handleCheckedArray(e, ind);
+                  }}
+                />
+              )}
               <span>{ind + 1}</span>
               <span>{i.title}</span>
               <span>{i.difficulty}</span>
@@ -79,19 +154,39 @@ const Dashboard = () => {
             </li>
           ))}
         </ol>
+      ) : (
+        <></>
       )}
       {dialogModalOpen && (
+        
         <div className="modal-container w-50">
           <div className="close" onClick={() => setDialogModalOpen(false)}>
             &times;
           </div>
-          <FormComponent
-            title={"Update Your Profile"}
-            fields={PROBLEM_FIELDS}
-            buttons={PROBLEM_BUTTONS}
-            handleEvents={handleEvents}
-            wrapperClass={"w-100-4"}
-          />
+          {openCheckBoxes ? (
+            <div className="selected-problems">
+              {problemsData
+                .filter((i, ind) => checkedArray[ind])
+                .map((i) => (
+                  <h3>{i.title}</h3>
+                ))}
+              {/* <div className="set-timing"> Set Timings</div> */}
+              <button
+                className="form-button cur-pointer m-r-1"
+                onClick={submitContest}
+              >
+                Submit
+              </button>
+            </div>
+          ) : (
+            <FormComponent
+              title={"Update Your Profile"}
+              fields={PROBLEM_FIELDS}
+              buttons={PROBLEM_BUTTONS}
+              handleEvents={handleEvents}
+              wrapperClass={"w-100-4"}
+            />
+          )}
         </div>
       )}
 

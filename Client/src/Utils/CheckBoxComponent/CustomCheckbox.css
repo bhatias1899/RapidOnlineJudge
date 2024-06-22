@@ -1,0 +1,22 @@
+.checkbox-container{
+    height: 1rem;
+    width: 1rem;
+    padding: .25rem;
+    border: 2px solid #343a40;
+    border-radius: .5rem;
+    box-shadow: #343a40 2px 2px;
+    background: #f8f9fa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+}
+.checked{
+    border: 2px solid #2989e8;
+    box-shadow: #343a40 2px 2px;
+    background: #b1d2f3;
+}
+.checkbox-container > img{
+    width: 1rem;
+    height: 1rem;
+}

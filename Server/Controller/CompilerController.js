@@ -23,10 +23,11 @@ export const runCode=async(req,res)=>{
             case 'js':output= await executeJavaScript(filepath,inputfilepath);break;
             default: output= await executeCpp(filepath,inputfilepath);  
         }
-        return res.status(200).json({success:true,output});
+        
+        return res.status(200).json({success:output[0].success,...output[0]});
     }catch(err){
         console.log("here its not fine ",err);
-        res.status(200).send({success:false, err})
+        res.status(200).send({success:false, ...err})
     }
     
 }
@@ -101,20 +102,20 @@ const executeCpp = (filepath, inputFilePath) => {
         // Compile the C++ code
         exec(`g++ ${filepath} -o ${outPath}`, (err, stdout, stderr) => {
             if (err) {
-                reject({ err, stderr });
+                reject({err: err +'/r/n' +stderr,success:false });
                 console.log("Compilation error",err);
                 return;
             }
             if (stderr) {
-                reject(stderr);
+                reject({err:stderr, success:false});
                 console.log("Compilation stderr");
                 return;
             }
-
+            try{
             // Read the input file
             fs.readFile(inputFilePath, 'utf8', (err, data) => {
                 if (err) {
-                    reject(err);
+                    reject({err, success:false});
                     return;
                 }
 
@@ -146,10 +147,90 @@ const executeCpp = (filepath, inputFilePath) => {
 
                     process.on('close', (code) => {
                         if (code !== 0) {
-                            results.push({ index, err: new Error(`Process exited with code ${code}`), stderr: errorOutput });
+                            results.push({ index, err: new Error(`Process exited with code ${code}`), stderr: errorOutput, success:false });
                             console.log(`Error in test case ${index + 1}`);
                         } else {
-                            results.push({ index, stdout: output });
+                            results.push({ index, stdout: output, success:true });
+                        }
+                        runTestCase(index + 1);
+                    });
+
+                    process.stdin.write(testCase);
+                    process.stdin.end();
+                };
+
+                // Start executing test cases from the first one
+                runTestCase(0);
+            });
+        }
+            catch(err){
+                reject({err:"Unable to process testcases", success:false});
+            }
+        });
+    });
+}
+
+const executeC = (filepath, inputFilePath) => {
+    const dirOutput = path.join(__dirname, 'output');
+    if (!fs.existsSync(dirOutput)) {
+        fs.mkdirSync(dirOutput);
+    }
+
+    const filename = `${path.basename(filepath).split(".")[0]}.out`;
+    const outPath = path.join(dirOutput, filename);
+
+    return new Promise((resolve, reject) => {
+        // Compile the C++ code
+        exec(`gcc ${filepath} -o ${outPath}`, (err, stdout, stderr) => {
+            if (err) {
+                reject({ err, stderr, success:false });
+                console.log("Compilation error",err);
+                return;
+            }
+            if (stderr) {
+                reject({stderr,success:false});
+                console.log("Compilation stderr");
+                return;
+            }
+
+            // Read the input file
+            fs.readFile(inputFilePath, 'utf8', (err, data) => {
+                if (err) {
+                    reject({err, success:false});
+                    return;
+                }
+
+                // Split the input data into test cases
+                const testCases = data.split('\r\n');
+                const results = [];
+                
+                // Function to execute test cases sequentially
+                const runTestCase = (index) => {
+                    if (index >= testCases.length) {
+                        resolve(results);
+                        return;
+                    }
+
+                    const testCase = testCases[index];
+                    const process = spawn(outPath);
+
+                    let output = '';
+                    let errorOutput = '';
+
+                    process.stdout.on('data', (data) => {
+                        output += data;
+                    });
+
+                    process.stderr.on('data', (data) => {
+                        errorOutput += data;
+                    });
+
+                    process.on('close', (code) => {
+                        if (code !== 0) {
+                            results.push({ index, err: new Error(`Process exited with code ${code}`), stderr: errorOutput, success:false });
+                            console.log(`Error in test case ${index + 1}`);
+                        } else {
+                            results.push({ index, stdout: output, success:true });
                         }
                         runTestCase(index + 1);
                     });
@@ -165,87 +246,158 @@ const executeCpp = (filepath, inputFilePath) => {
     });
 }
 
-export const executeC=(filepath,input)=>{
-    const dirOutput=path.join(__dirname,'output');
-    if(!fs.existsSync(dirOutput)){
+const executeJava = (filepath, inputFilePath) => {
+    debugger
+    const dirOutput = path.join(__dirname, 'output');
+    if (!fs.existsSync(dirOutput)) {
         fs.mkdirSync(dirOutput);
     }
-    
-    const filename=`${path.basename(filepath).split(".")[0]}.out`;
-    const outPath=path.join(dirOutput,filename);
-    
-    try{
-        return new Promise((resolve,reject)=>{
-            exec(`gcc ${filepath} -o ${outPath} && cd ${dirOutput} && .\\${filename} ${ input &&`< ${input}`} `,(err,stdout,stderr)=>{
-                if(err){
-                    reject({err,stderr});
-                    console.log("problem lies here?? finally");
+
+
+    return new Promise((resolve, reject) => {
+        debugger
+        // Compile the C++ code
+        exec(`javac ${filepath} -d ${dirOutput} && cd ${dirOutput}`, (err, stdout, stderr) => {
+            if (err) {
+                reject({err: err +'/r/n' +stderr,success:false });
+                console.log("Compilation error",err);
+                return;
+            }
+            if (stderr) {
+                reject({err:stderr, success:false});
+                console.log("Compilation stderr");
+                return;
+            }
+
+
+            try{
+            // Read the input file
+            fs.readFile(inputFilePath, 'utf8', (err, data) => {
+                if (err) {
+                    reject(err);
+                    return;
                 }
-                if(stderr){
-                    reject(stderr);
-                    console.log("problem lies here?? finally");
-                }
-                resolve(stdout);
-            })
+
+                // Split the input data into test cases
+                const testCases = data.split('\r\n');
+                const results = [];
+                
+                console.log(testCases,"here are test cases")
+                // Function to execute test cases sequentially
+                const runTestCase = (index) => {
+                    if (index >= testCases.length) {
+                        resolve(results);
+                        return;
+                    }
+
+                    const testCase = testCases[index];
+                    const process = spawn('java', ['-cp', dirOutput, 'Main']);
+
+                    let output = '';
+                    let errorOutput = '';
+                    debugger
+                    process.stdout.on('data', (data) => {
+                        output += data;
+                    });
+
+                    process.stderr.on('data', (data) => {
+                        errorOutput += data;
+                    });
+
+                    process.on('close', (code) => {
+                        if (code !== 0) {
+                            results.push({ index, err: new Error(`Process exited with code ${code}`), stderr: errorOutput, success:false });
+                            console.log(`Error in test case ${index + 1}`);
+                        } else {
+                            results.push({ index, stdout: output, success:true });
+                        }
+                        runTestCase(index + 1);
+                    });
+
+                    process.stdin.write(testCase);
+                    process.stdin.end();
+                };
+
+                // Start executing test cases from the first one
+                runTestCase(0);
+            });
+        }catch(err){
+            reject({err:"Unable to process testcases", success:false});
+        }
         });
-    }
-
-
-    catch(err){
-        console.log(err,"problem lies here??")
-    }
-
+    });
 }
 
-export const executeJava = (filepath, input) => {
-    const dirOutput = path.join(__dirname, 'output');
-    if (!fs.existsSync(dirOutput)) {
-        fs.mkdirSync(dirOutput);
-    }
-    const className = path.basename(filepath).split(".")[0];
-    
-    console.log("calling java compiler",className)
-    try {
-        
-        return new Promise((resolve, reject) => {
-            exec(`javac ${filepath} -d ${dirOutput} && cd ${dirOutput} && java Main ${ input &&`< ${input}`}`, (err, stdout, stderr) => {
-                if (err) {
-                    reject({ err, stderr });
-                }
-                if (stderr) {
-                    reject(stderr);
-                }
-                resolve(stdout);
-            });
-        });
-    } catch (err) {
-        console.log(err, "problem lies here??");
-    }
-};
 
-export const executePython = (filepath, input) => {
+
+const executePython = (filepath, inputFilePath) => {
     const dirOutput = path.join(__dirname, 'output');
     if (!fs.existsSync(dirOutput)) {
         fs.mkdirSync(dirOutput);
     }
-    
-    try {
+
+   
+
+    return new Promise((resolve, reject) => {
         
-        return new Promise((resolve, reject) => {
-            exec(`python ${filepath} ${ input &&`< ${input}`} `, (err, stdout, stderr) => {
+        try{
+            // Read the input file
+            fs.readFile(inputFilePath, 'utf8', (err, data) => {
                 if (err) {
-                    reject({ err, stderr });
+                    reject(err);
+                    return;
                 }
-                if (stderr) {
-                    reject(stderr);
-                }
-                resolve(stdout);
+
+                // Split the input data into test cases
+                const testCases = data.split('\r\n');
+                const results = [];
+                
+                console.log(testCases,"here are test cases")
+                // Function to execute test cases sequentially
+                const runTestCase = (index) => {
+                    if (index >= testCases.length) {
+                        resolve(results);
+                        return;
+                    }
+
+                    const testCase = testCases[index];
+                    const process = spawn('python', [filepath]);
+
+                    let output = '';
+                    let errorOutput = '';
+
+                    process.stdout.on('data', (data) => {
+                        output += data;
+                    });
+
+                    process.stderr.on('data', (data) => {
+                        errorOutput += data;
+                    });
+
+                    process.on('close', (code) => {
+                        if (code !== 0) {
+                            results.push({ index, err: new Error(`Process exited with code ${code}`), stderr: errorOutput, success:false });
+                            console.log(`Error in test case ${index + 1}`);
+                        } else {
+                            results.push({ index, stdout: output, success:true });
+                        }
+                        runTestCase(index + 1);
+                    });
+
+                    process.stdin.write(testCase);
+                    process.stdin.end();
+                };
+
+                // Start executing test cases from the first one
+                runTestCase(0);
             });
+        }catch(err){
+            reject({err:"Unable to process testcases", success:false});
+        }
         });
-    } catch (err) {
-        console.log(err, "problem lies here??");
-    }
-};
+}
+
+
 
 export const executeJavaScript = (filepath, input) => {
     const dirOutput = path.join(__dirname, 'output');

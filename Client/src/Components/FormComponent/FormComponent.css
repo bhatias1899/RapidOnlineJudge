@@ -5,6 +5,8 @@
   background: #f8f9fa;
   padding: 2rem;
   width: calc(100% - 12rem);
+  max-height: calc(100% - 7rem);
+  overflow: scroll;
 
 }
 
