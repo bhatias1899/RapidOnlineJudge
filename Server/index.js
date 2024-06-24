@@ -23,4 +23,3 @@ app.use('/', router);
 app.listen(5000,(req,res)=>{
     console.log("Listening to port 5000");
 })
-
