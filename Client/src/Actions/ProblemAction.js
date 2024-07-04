@@ -4,13 +4,12 @@ import {
   DELETE_PROBLEM_API,
   GET_PROBLEMS_API,
 } from "../ApiEndpoints/apiEndpoint";
-import { SERVER_BASE_URL } from "../Constants";
 import { CREATE_NEW_PROBLEM, DELETE_PROBLEM, GET_PROBLEMS } from "./actionTypes";
 
 export const createProblem = (payload) => {
   return function (dispatch) {
     axios
-      .post(`${SERVER_BASE_URL}${CREATE_PROBLEM_API}`, payload, {
+      .post(`${process.env.REACT_APP_SERVER_URL}${CREATE_PROBLEM_API}`, payload, {
         withCredentials: true,
       })
       .then((res) => {
@@ -33,7 +32,7 @@ export const getProblems = (id) => {
   return async (dispatch) => {
     try {
       const response = await axios.get(
-        `${SERVER_BASE_URL}${GET_PROBLEMS_API}${id ? `/${id}` : ""}`,
+        `${process.env.REACT_APP_SERVER_URL}${GET_PROBLEMS_API}${id ? `/${id}` : ""}`,
         { withCredentials: true }
       );
       dispatch({
@@ -52,7 +51,7 @@ export const deleteProblem=(id)=>{
   return async (dispatch) => {
     try {
       const response = await axios.get(
-        `${SERVER_BASE_URL}${DELETE_PROBLEM_API}${id ? `/${id}` : ""}`,
+        `${process.env.REACT_APP_SERVER_URL}${DELETE_PROBLEM_API}${id ? `/${id}` : ""}`,
         { withCredentials: true }
       );
       dispatch({

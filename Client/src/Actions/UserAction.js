@@ -8,12 +8,11 @@ import {
   UPDATE_USER_API,
 } from "../ApiEndpoints/apiEndpoint";
 import * as actionType from "./actionTypes";
-import { SERVER_BASE_URL } from "../Constants";
 
 export const createUser = (payload) => {
   return function (dispatch) {
     axios
-      .post(`${SERVER_BASE_URL}${CREATE_NEW_USER_API}`, payload)
+      .post(`${process.env.REACT_APP_SERVER_URL}${CREATE_NEW_USER_API}`, payload)
 
       .then((res) => {
         dispatch({
@@ -32,7 +31,7 @@ export const createUser = (payload) => {
 export const fetchProfile = (changeStates) => {
   return function (dispatch) {
     axios
-      .get(`${SERVER_BASE_URL}${GET_USER_API}`, { withCredentials: true })
+      .get(`${process.env.REACT_APP_SERVER_URL}${GET_USER_API}`, { withCredentials: true })
       .then((res) => {
         changeStates(res.data.user);
         dispatch({
@@ -53,7 +52,7 @@ export const fetchProfile = (changeStates) => {
 export const updateUser = (payload) => {
   return function (dispatch) {
     axios
-      .post(`${SERVER_BASE_URL}${UPDATE_USER_API}`, payload, {
+      .post(`${process.env.REACT_APP_SERVER_URL}${UPDATE_USER_API}`, payload, {
         withCredentials: true,
       })
       .then((res) => {
@@ -70,7 +69,7 @@ export const updateUser = (payload) => {
 export const deleteUser = () => {
   return function (dispatch) {
     axios
-      .get(`${SERVER_BASE_URL}${DELETE_USER_API}`, { withCredentials: true })
+      .get(`${process.env.REACT_APP_SERVER_URL}${DELETE_USER_API}`, { withCredentials: true })
       .then((res) => {
         dispatch({
           type: actionType.LOGIN_USER,
@@ -84,7 +83,7 @@ export const deleteUser = () => {
 export const loginUser = (payload) => {
   return function (dispatch) {
     axios
-      .post(`${SERVER_BASE_URL}${LOGIN_USER_API}`, payload, {
+      .post(`${process.env.REACT_APP_SERVER_URL}${LOGIN_USER_API}`, payload, {
         withCredentials: true,
       })
       .then((res) => {
@@ -105,7 +104,7 @@ export const loginUser = (payload) => {
 export const logoutUser = () => {
   return function (dispatch) {
     axios
-      .get(`${SERVER_BASE_URL}${LOGOUT_USER_API}`, {
+      .get(`${process.env.REACT_APP_SERVER_URL}${LOGOUT_USER_API}`, {
         withCredentials: true,
       })
       .then((res) => {
